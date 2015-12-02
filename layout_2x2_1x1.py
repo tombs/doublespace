@@ -135,35 +135,6 @@ def layout(img, layer, outputFolder):
         #gimp.message("Success!")
     except Exception as err:
         gimp.message("Unexpected error: " + str(err))
-    #layer = pdb.gimp_layer_new(image,1024,768,0,"layer1",100,0)
-	#display = pdb.gimp_display_new(image)
-    #for file in os.listdir(inputFolder):
-    #    try:
-    #        # Build the full file paths.
-    #        inputPath = inputFolder + "\\" + file
-    #        outputPath = outputFolder + "\\" + file
-    #    
-    #        # Open the file if is a JPEG or PNG image.
-    #        image = None
-    #        if(file.lower().endswith(('.png'))):
-    #            image = pdb.file_png_load(inputPath, inputPath)
-    #        if(file.lower().endswith(('.jpeg', '.jpg'))):
-    #            image = pdb.file_jpeg_load(inputPath, inputPath)
-    #            
-    #        # Verify if the file is an image.
-    #        if(image != None):
-    #            # Invert the image.
-    #            if(len(image.layers) > 0):
-    #                layer = image.layers[0]
-    #                pdb.plug_in_cartoon(image, layer, maskRadius, blackPct)
-    #                
-    #                # Save the image.
-    #                if(file.lower().endswith(('.png'))):
-    #                    pdb.file_png_save(image, image.layers[0], outputPath, outputPath, 0, 9, 0, 0, 0, 0, 0)
-    #                if(file.lower().endswith(('.jpeg', '.jpg'))):
-    #                    pdb.file_jpeg_save(image, layer, outputPath, outputPath, 0.9, 0, 0, 0, "Creating with GIMP", 0, 0, 0, 0)
-    #    except Exception as err:
-    #        gimp.message("Unexpected error: " + str(err))
 
 # Function to copy the original image
 def copy_orig_picture(image, layer):
