@@ -178,7 +178,7 @@ def duplicate_picture(orig_image, canvass_image, xpos, ypos,img_width, img_heigh
     return layer
     
 from os.path import expanduser
-folder = expanduser("~") + "\\Pictures\\doublespace"
+folder = expanduser("~") + "\\Desktop\\doublespace"
 if not os.path.exists(folder):
     os.makedirs(folder)
 
