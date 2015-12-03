@@ -35,7 +35,7 @@ from gimpfu import *
 from datetime import datetime
 
 def layout(img, layer, outputFolder):
-    ''' Make multiple copies of a selected size of a square ID picture.
+    ''' Make multiple 1 x 1 copies of a square ID picture.
     
     Parameters:
     img : image The current image.
@@ -162,13 +162,13 @@ if not os.path.exists(folder):
     os.makedirs(folder)
 
 register(
-    "python_fu_multilayout",
+    "python_fu_multi_1x1",
     "Multi any",
     "Make multiple copies of a square ID picture",
     "ETT",
     "Open source (BSD 3-clause license)",
     "2015",
-    "<Image>/Filters/DoubleSpace/Custom Sizes",
+    "<Image>/Filters/DoubleSpace/1 x 1 4R",
     "*",
     [
         #(PF_DIRNAME, "inputFolder", "Input directory", ""),
