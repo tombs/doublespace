@@ -71,8 +71,8 @@ def layout(img, layer, outputFolder):
     copy_height_1x1 = 300
     copy_width_2x2 = 600
     copy_height_2x2 = 600
-    current_position_x = 50
-    current_position_y = 50
+    current_position_x = 100
+    current_position_y = 100
 
     try:
         # Create output path and filename
@@ -93,19 +93,19 @@ def layout(img, layer, outputFolder):
         
         #Create duplicates of the processed (resized) images
         layer = duplicate_picture(img2x2,canvass,current_position_x, current_position_y,copy_width_2x2,copy_height_2x2,"2x2 1st copy")    
-        current_position_y = current_position_y + pdb.gimp_drawable_height(layer) + 100
+        current_position_y = current_position_y + pdb.gimp_drawable_height(layer) + 50
 
         layer = duplicate_picture(img2x2,canvass,current_position_x, current_position_y,copy_width_2x2,copy_height_2x2,"2x2 2nd copy")
-        current_position_y = current_position_y + pdb.gimp_drawable_height(layer) + 100
+        current_position_y = current_position_y + pdb.gimp_drawable_height(layer) + 50
         
         
         layer = duplicate_picture(img1x1,canvass,current_position_x, current_position_y,copy_width_1x1,copy_height_1x1,"1x1 1st copy")
-        current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + 100
+        current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + 50
 
         layer = duplicate_picture(img1x1,canvass,current_position_x, current_position_y,copy_width_1x1,copy_height_1x1,"1x1 2nd copy")
-        current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + 100
+        current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + 50
         
-        current_position_y = 50
+        current_position_y = 100
         
         layer = duplicate_picture(img1x1,canvass,current_position_x, current_position_y,copy_width_1x1,copy_height_1x1,"1x1 3rd copy")
         current_position_y = current_position_y + pdb.gimp_drawable_height(layer) + 100
