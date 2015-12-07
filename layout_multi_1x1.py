@@ -72,8 +72,8 @@ def layout(img, layer, outputFolder):
     copy_width = 300
     copy_height = 300
     copy_interval = 50
-    current_position_x = copy_interval
-    current_position_y = copy_interval
+    current_position_x = copy_interval + 50
+    current_position_y = copy_interval 
 
     try:
         # Create output path and filename
@@ -98,7 +98,7 @@ def layout(img, layer, outputFolder):
             current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + copy_interval
 
             if current_position_x > canvass_width - (copy_width + copy_interval):
-                current_position_x = copy_interval
+                current_position_x = copy_interval + 50
                 current_position_y = current_position_y + copy_height + copy_interval
             
                 if current_position_y > canvass_height - (copy_height + copy_interval):
