@@ -72,8 +72,8 @@ def layout(img, layer, outputFolder):
     copy_width = 450
     copy_height = 450
     copy_interval = 50
-    current_position_x = copy_interval
-    current_position_y = copy_interval
+    current_position_x = copy_interval + 50
+    current_position_y = copy_interval + 50
 
     try:
         # Create output path and filename
@@ -95,10 +95,10 @@ def layout(img, layer, outputFolder):
         
         while (1):
             layer = duplicate_picture(img_copy,canvass,current_position_x, current_position_y,copy_width,copy_height,"duplicate")
-            current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + copy_interval
+            current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + copy_interval + 50
 
             if current_position_x > canvass_width - (copy_width + copy_interval):
-                current_position_x = copy_interval
+                current_position_x = copy_interval + 50
                 current_position_y = current_position_y + copy_height + copy_interval
             
                 if current_position_y > canvass_height - (copy_height + copy_interval):
