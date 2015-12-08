@@ -46,7 +46,7 @@ def layout(img, layer, picture_size, paper_size, outputFolder):
     #gimp.message("Picture Size: " + str(picture_size))
     #gimp.message("Paper Size: " + str(paper_size))
     paper = {0:'4R',1:'5R',2:'A4'}
-    picture = {0:'1 x 1',1:'1.5 x 1.5',2:'2 x 2'}
+    picture = {0:'1 x 1',1:'1.5 x 1.5',2:'2 x 2',3:'PH Passport'}
     
     paper_size = paper[paper_size]
     picture_size = picture[picture_size]
@@ -66,7 +66,7 @@ def layout(img, layer, picture_size, paper_size, outputFolder):
     
    
     paper_sizes = {'4R':{'width':1200,'height':1800},'5R':{'width':1500,'height':2100},'A4':{'width':2481,'height':3507}}
-    picture_sizes = {'1 x 1':{'width':300,'height':300}, '1.5 x 1.5':{'width':450,'height':450}, '2 x 2':{'width':600,'height':600}}
+    picture_sizes = {'1 x 1':{'width':300,'height':300}, '1.5 x 1.5':{'width':450,'height':450}, '2 x 2':{'width':600,'height':600},'PH Passport':{'width':411,'height':531}}
     
     
     #img_resolution_x = picture_sizes[picture_size]['width']
@@ -78,8 +78,16 @@ def layout(img, layer, picture_size, paper_size, outputFolder):
     # Image must be a perfect square
     # Image should be at least 600x600 pixels (for a 2x2 picture)
     if img_height != img_width:
-        gimp.message("Image is not a perfect square!")
-        return
+        passport_ratio =  round(531/411.0,2)
+        ratio = img_height * 1.0 / img_width
+        ratio = round(ratio, 2)
+        
+        if ratio == passport_ratio:
+        
+            gimp.message("Image is a PH passport!")
+        else:
+            gimp.message("Image size is not processable!")
+            return
     elif img_height < img_resolution_y:
         gimp.message("Minimum size should be" + str(img_resolution_x) + " X " + str(img_resolution_y) + " pixels")
         return
@@ -192,7 +200,7 @@ register(
     "<Image>/Filters/DoubleSpace/Custom Sizes",
     "*",
     [
-        (PF_OPTION, "picture_size"  ,("Picture Size: "), 0 ,["1 x 1", "1.5 x 1.5", "2 x 2"]),
+        (PF_OPTION, "picture_size"  ,("Picture Size: "), 0 ,["1 x 1", "1.5 x 1.5", "2 x 2", "PH Passport"]),
         (PF_OPTION, "paper_size"  ,("Paper Size: "), 0 ,["4R", "5R", "A4"]),        
         #(PF_OPTION, "file_type"  ,("File type: "), 0 ,[".jpg", ".png", ".tif", ".pcx", ".xcf", ("all registered formats")]),
         #(PF_DIRNAME, "inputFolder", "Input directory", ""),
