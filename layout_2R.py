@@ -188,6 +188,7 @@ def resize_picture(orig_image, orig_width, orig_height, target_width, target_hei
 
 # Function to make additional copies of the resized images    
 def duplicate_picture(orig_image, canvass_image, xpos, ypos,img_width, img_height, name):
+    pdb.gimp_context_set_background((255,255,255))
     layer = pdb.gimp_layer_new(canvass_image,img_width,img_height,0,name,100,0)
     pdb.gimp_image_add_layer(canvass_image,layer,-1)
     pdb.gimp_selection_all(orig_image)
