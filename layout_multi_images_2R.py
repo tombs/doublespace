@@ -34,7 +34,7 @@ import copy
 from gimpfu import *
 from datetime import datetime
 
-def layout(img, layer, picture_size, paper_size, inputFolder, outputFolder):
+def layout(img, layer, paper_size, inputFolder, outputFolder):
     ''' Make multiple page layouts  of different pictures loaded from a directory.
     
     Parameters:
@@ -49,7 +49,7 @@ def layout(img, layer, picture_size, paper_size, inputFolder, outputFolder):
     picture = {0:'1 x 1',1:'1.5 x 1.5',2:'2 x 2',3:'PH Passport',4:'2R'}
     
     paper_size = paper[paper_size]
-    picture_size = picture[picture_size]
+    #picture_size = picture[picture_size]
 
     #gimp.message("Picture Size: " + str(picture_size))
     #gimp.message("Paper Size: " + str(paper_size))
@@ -100,11 +100,12 @@ def layout(img, layer, picture_size, paper_size, inputFolder, outputFolder):
     current_position_x = copy_interval + 50
     current_position_y = copy_interval + 50
     
-    files = os.listdir(inputFolder)
+    files = sorted(os.listdir(inputFolder))
     file_count = len(files)
     last_file = False
     canvass_full = True
     for file in files :
+        gimp.message("File: "+str(file))
         if files.index(file) + 1 == file_count:
             last_file = True
             
@@ -135,7 +136,7 @@ def layout(img, layer, picture_size, paper_size, inputFolder, outputFolder):
                     # Make copies of the original image.
                     # This is so that the original image remains unmodified all throughout the processing
                     
-                    img_copy = copy_orig_picture(image,layer)
+                    img_copy = image
                     
                     # Get original image height and width
                     img_height = pdb.gimp_image_height(image)
@@ -148,12 +149,12 @@ def layout(img, layer, picture_size, paper_size, inputFolder, outputFolder):
                     # Image should be at least 600x600 pixels (for a 2x2 picture)
                     if img_height > img_width:
                         img_orientation = 'portrait'        
-                        #gimp.message("Image is Portrait")
+                        gimp.message("Image is Portrait")
                         #return
                     
                     if img_height < img_width:
                         img_orientation = 'landscape'
-                        #gimp.message("Image is Landscape")
+                        gimp.message("Image is Landscape")
                         #return
                         
                     if img_orientation == 'portrait':
@@ -174,27 +175,30 @@ def layout(img, layer, picture_size, paper_size, inputFolder, outputFolder):
                         canvass = pdb.gimp_image_new(canvass_width,canvass_height,RGB)
                         canvass_full = False
                         #display = pdb.gimp_display_new(canvass)
-                        #gimp.message("File counter:" + str(file_counter))
+                        gimp.message("File counter:" + str(file_counter))
                     
                     #Create duplicates of the processed (resized) images
                     
-                    
+                    gimp.message("Duplicate picture")
                     layer = duplicate_picture(img_copy,canvass,current_position_x, current_position_y,copy_width,copy_height,"duplicate")
                     current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + copy_interval
 
+                    gimp.message("Set next position")
                     if current_position_x > canvass_width - (copy_width + copy_interval):
                         current_position_x = copy_interval + 50
                         current_position_y = current_position_y + copy_height + copy_interval
                     
                         if (current_position_y > canvass_height - (copy_height + copy_interval)) or last_file:
-                            #gimp.message("Reached maximum number of drawings!")
+                            gimp.message("Reached maximum number of drawings!")
                             canvass_full = True
                             
                             current_position_x = copy_interval + 50
                             current_position_y = copy_interval + 50
                             		        
-                    
+                            gimp.message("Flatten canvass")
                             pdb.gimp_image_flatten(canvass)
+                            
+                            gimp.message("Set image resolution")
                             pdb.gimp_image_set_resolution(canvass, img_resolution_x, img_resolution_y)
                     
                             # Save the image.
@@ -209,10 +213,18 @@ def layout(img, layer, picture_size, paper_size, inputFolder, outputFolder):
                             #    pdb.file_png_save(canvass, canvass.layers[0], outputPath, outputPath, 0, 9, 0, 0, 0, 0, 0)
                                 
                             #if(file.lower().endswith(('.jpeg', '.jpg'))):
+                            gimp.message("Save file")
                             pdb.file_jpeg_save(canvass, canvass.layers[0], outputPath, outputPath, 0.9, 0, 0, 0, "Creating with GIMP", 0, 0, 0, 0)
-                    
+                            #del canvass
                             #Display resulting image
                             #display = pdb.gimp_display_new(canvass)
+                            pdb.gimp_image_delete(canvass)
+                            gimp.message("Deleted canvass image!")
+                    
+                    #del img_copy
+                #del image
+                pdb.gimp_image_delete(image)
+                gimp.message("Deleted image copy")
                     
         except Exception as err:
             gimp.message("Unexpected error: " + str(err))
@@ -246,13 +258,18 @@ def resize_picture(orig_image, new_width, new_height):
 
 # Function to make additional copies of the resized images    
 def duplicate_picture(orig_image, canvass_image, xpos, ypos,img_width, img_height, name):
+    gimp.message("Set background to white")
     pdb.gimp_context_set_background((255,255,255))
+    
+    gimp.message("Add new layer")
     layer = pdb.gimp_layer_new(canvass_image,img_width,img_height,0,name,100,0)
     pdb.gimp_image_add_layer(canvass_image,layer,-1)
     pdb.gimp_selection_all(orig_image)
     pdb.gimp_edit_copy(orig_image.layers[0])
+    gimp.message("Paste image")
     selection = pdb.gimp_edit_paste(layer,-1)
     pdb.gimp_floating_sel_anchor(selection)
+    gimp.message("Set image position")
     pdb.gimp_layer_set_offsets(layer,xpos,ypos)
     return layer
     
@@ -263,15 +280,15 @@ if not os.path.exists(folder):
 
 register(
     "python_fu_multi_picture",
-    "Multi any",
-    "Make multiple page layouts of different pictures from a source directory",
+    "Multi picture 2R",
+    "Make multiple 2R layouts of different pictures from a source directory",
     "ETT",
     "Open source (BSD 3-clause license)",
     "2015",
-    "<Image>/Filters/DoubleSpace/Multiple Pictures",
+    "<Image>/Filters/DoubleSpace/Multiple Sources 2R Output haay",
     "*",
     [
-        (PF_OPTION, "picture_size"  ,("Picture Size: "), 0 ,["1 x 1", "1.5 x 1.5", "2 x 2", "PH Passport"]),
+        #(PF_OPTION, "picture_size"  ,("Picture Size: "), 0 ,["1 x 1", "1.5 x 1.5", "2 x 2", "PH Passport"]),
         (PF_OPTION, "paper_size"  ,("Paper Size: "), 0 ,["4R", "5R", "A4"]),        
         #(PF_OPTION, "file_type"  ,("File type: "), 0 ,[".jpg", ".png", ".tif", ".pcx", ".xcf", ("all registered formats")]),
         (PF_DIRNAME, "inputFolder", "Input directory", folder),
