@@ -285,7 +285,7 @@ register(
     "ETT",
     "Open source (BSD 3-clause license)",
     "2015",
-    "<Image>/Filters/DoubleSpace/Multiple Sources 2R Output haay",
+    "<Image>/Filters/DoubleSpace/Multiple Sources 2R Output",
     "*",
     [
         #(PF_OPTION, "picture_size"  ,("Picture Size: "), 0 ,["1 x 1", "1.5 x 1.5", "2 x 2", "PH Passport"]),
