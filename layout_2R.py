@@ -225,7 +225,7 @@ register(
     "ETT",
     "Open source (BSD 3-clause license)",
     "2015",
-    "<Image>/Filters/DoubleSpace/Images to 2R",
+    "<Image>/Filters/DoubleSpace/Image to 2R",
     "*",
     [
         #(PF_OPTION, "picture_size"  ,("Picture Size: "), 0 ,["1 x 1", "1.5 x 1.5", "2 x 2"]),
