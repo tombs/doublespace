@@ -34,7 +34,7 @@ import copy
 from gimpfu import *
 from datetime import datetime
 
-def layout(img, layer, outputFolder):
+def layout(img, layer, paper_size,outputFolder):
     ''' Make 2R copies of a selected picture.
     
     Parameters:
@@ -45,10 +45,10 @@ def layout(img, layer, outputFolder):
     
     #gimp.message("Picture Size: " + str(picture_size))
     #gimp.message("Paper Size: " + str(paper_size))
-    paper = {0:'4R',1:'5R',2:'A4'}
+    paper = {0:'4R',1:'5R',2:'A4',3:'Letter'}
     picture = {0:'1 x 1',1:'1.5 x 1.5',2:'2 x 2'}
     
-    paper_size = '4R'
+    paper_size = paper[paper_size]
     picture_size = ''
 
     #gimp.message("Picture Size: " + str(picture_size))
@@ -65,7 +65,7 @@ def layout(img, layer, outputFolder):
     img_width = pdb.gimp_image_width(img)
     img_orientation = None
    
-    paper_sizes = {'4R':{'width':1200,'height':1800},'5R':{'width':1500,'height':2100},'A4':{'width':2481,'height':3507}}
+    paper_sizes = {'4R':{'width':1200,'height':1800},'5R':{'width':1500,'height':2100},'A4':{'width':2481,'height':3507},'Letter':{'width':2550,'height':3300}}
     picture_sizes = {'1 x 1':{'width':300,'height':300}, '1.5 x 1.5':{'width':450,'height':450}, '2 x 2':{'width':600,'height':600}}
     
     
@@ -126,17 +126,27 @@ def layout(img, layer, outputFolder):
         # Make the picture canvass. This is where we will do all the dirty work.
         canvass = None
         canvass = pdb.gimp_image_new(canvass_width,canvass_height,RGB)
-        
         #Create duplicates of the processed (resized) images
         
         
-        layer = duplicate_picture(img_copy,canvass,current_position_x, current_position_y,img_width,img_height,"duplicate")
+        #layer = duplicate_picture(img_copy,canvass,current_position_x, current_position_y,img_width,img_height,"duplicate")
         #current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + copy_interval
 
         
-        current_position_y = current_position_y + copy_height + copy_interval
-        layer = duplicate_picture(img_copy,canvass,current_position_x, current_position_y,img_width,img_height,"duplicate 2")
-        
+        #current_position_y = current_position_y + copy_height + copy_interval
+        #layer = duplicate_picture(img_copy,canvass,current_position_x, current_position_y,img_width,img_height,"duplicate 2")
+
+        while (1):
+            layer = duplicate_picture(img_copy,canvass,current_position_x, current_position_y,img_width,img_height,"duplicate")
+            current_position_x = current_position_x + pdb.gimp_drawable_width(layer) + copy_interval
+
+            if current_position_x > canvass_width - (copy_width + copy_interval):
+                current_position_x = copy_interval + 50
+                current_position_y = current_position_y + copy_height + copy_interval
+            
+                if current_position_y > canvass_height - (copy_height + copy_interval):
+                    gimp.message("Reached maximum number of drawings!")
+                    break	        
         		        
         
         pdb.gimp_image_flatten(canvass)
@@ -188,13 +198,18 @@ def resize_picture(orig_image, orig_width, orig_height, target_width, target_hei
 
 # Function to make additional copies of the resized images    
 def duplicate_picture(orig_image, canvass_image, xpos, ypos,img_width, img_height, name):
+    gimp.message("Set background to white")
     pdb.gimp_context_set_background((255,255,255))
+    
+    gimp.message("Add new layer")
     layer = pdb.gimp_layer_new(canvass_image,img_width,img_height,0,name,100,0)
     pdb.gimp_image_add_layer(canvass_image,layer,-1)
     pdb.gimp_selection_all(orig_image)
     pdb.gimp_edit_copy(orig_image.layers[0])
+    gimp.message("Paste image")
     selection = pdb.gimp_edit_paste(layer,-1)
     pdb.gimp_floating_sel_anchor(selection)
+    gimp.message("Set image position")
     pdb.gimp_layer_set_offsets(layer,xpos,ypos)
     return layer
     
@@ -210,11 +225,11 @@ register(
     "ETT",
     "Open source (BSD 3-clause license)",
     "2015",
-    "<Image>/Filters/DoubleSpace/2R x 2",
+    "<Image>/Filters/DoubleSpace/Images to 2R",
     "*",
     [
         #(PF_OPTION, "picture_size"  ,("Picture Size: "), 0 ,["1 x 1", "1.5 x 1.5", "2 x 2"]),
-        #(PF_OPTION, "paper_size"  ,("Paper Size: "), 0 ,["4R", "5R", "A4"]),        
+        (PF_OPTION, "paper_size"  ,("Paper Size: "), 0 ,["4R", "5R", "A4","Letter"]),        
         #(PF_OPTION, "file_type"  ,("File type: "), 0 ,[".jpg", ".png", ".tif", ".pcx", ".xcf", ("all registered formats")]),
         #(PF_DIRNAME, "inputFolder", "Input directory", ""),
         (PF_DIRNAME, "outputFolder", "Output directory", folder),
