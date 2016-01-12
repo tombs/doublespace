@@ -168,7 +168,7 @@ register(
     "ETT",
     "Open source (BSD 3-clause license)",
     "2015",
-    "<Image>/Filters/DoubleSpace/1.5 x 1.5 4R",
+    "<Image>/Filters/DoubleSpace/ID 1.5 x 1.5 4R",
     "*",
     [
         #(PF_DIRNAME, "inputFolder", "Input directory", ""),
